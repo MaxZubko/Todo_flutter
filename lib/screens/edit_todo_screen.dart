@@ -1,29 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_todo_bloc/bloc/todo_bloc.dart';
-import 'package:flutter_todo_bloc/models/todo.dart';
+
+import 'package:flutter_todo_bloc/cubit/todo_cubit.dart';
+import 'package:flutter_todo_bloc/cubit/todo_state.dart';
 
 class EditTodoScreen extends StatelessWidget {
-  final Todo todo;
-  EditTodoScreen({Key? key, required this.todo}) : super(key: key);
+  // Map? tasks;
+  String title;
+  int id;
+  EditTodoScreen({Key? key, required this.title, required this.id})
+      : super(key: key);
 
   final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    _controller.text = todo.description;
+    _controller.text = title;
 
-    return BlocBuilder<TodoBloc, TodoState>(builder: (context, state) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Edit Todo',
-            style: TextStyle(fontSize: 20.0),
-          ),
-        ),
-        body: _body(context),
-      );
-    });
+    return BlocConsumer<AppCubit, AppStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text(
+                'Edit Todo',
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+            body: _body(context),
+          );
+        });
   }
 
   Widget _body(context) {
@@ -34,22 +40,25 @@ class EditTodoScreen extends StatelessWidget {
           TextFormField(
             controller: _controller,
             autocorrect: true,
+            maxLines: 2,
             decoration: const InputDecoration(hintText: 'Enter todo message'),
           ),
           const SizedBox(
             height: 10.0,
           ),
+          // ElevatedButton(
+          //   // style:,
+          //   onPressed: () {
+          //     AppCubit.get(context).updateDatabase('Done', id);
+          //   },
+          //   child: Text(
+          //     'Update Data',
+          //     style: TextStyle(color: Colors.amber.shade700),
+          //   ),
+          // ),
           InkWell(
             onTap: () {
-              // BlocProvider.of<TodoBloc>(context)
-              //     .add(UpdateTodos(Todo(description: _todoName)));
-              final updateTodo = Todo(description: _controller.text);
-              BlocProvider.of<TodoBloc>(context).add(
-                UpdateTodos(
-                  updateTodo,
-                  // _controller.text,
-                ),
-              );
+              AppCubit.get(context).updateDatabase('Done', id);
               Navigator.pop(context);
             },
             child: _updateBtn(context),

@@ -38,6 +38,7 @@ dependencies:
   equatable: ^2.0.3
   sqflite: ^2.0.1
   path_provider: ^2.0.8
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
